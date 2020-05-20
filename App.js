@@ -22,12 +22,13 @@ import NavStack from './NavStack'
 
 const App: () => React$Node = () => {
   return (
-    <NavigationContainer style={{flex: 1}}>
+    <NavigationContainer style={styles.engine}>
       <NavStack />
     </NavigationContainer>
   );
 };
-
+const width_proportion = '100%'
+const height_proportion = '100%'
 const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: Colors.lighter,
@@ -35,6 +36,8 @@ const styles = StyleSheet.create({
   engine: {
     position: 'absolute',
     right: 0,
+    width: width_proportion,
+    height: height_proportion,
   },
   body: {
     backgroundColor: Colors.white,
