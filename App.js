@@ -22,8 +22,8 @@ import NavStack from './NavStack'
 
 const App: () => React$Node = () => {
   return (
-    <NavigationContainer>
-          <NavStack />
+    <NavigationContainer style={{flex: 1}}>
+      <NavStack />
     </NavigationContainer>
   );
 };
