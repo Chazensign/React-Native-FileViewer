@@ -5,8 +5,9 @@
  * @format
  * @flow strict-local
  */
-
+import 'react-native-gesture-handler'
 import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,26 +15,16 @@ import {
   View,
   Text,
   StatusBar,
-} from 'react-native';
+} from 'react-native'
 
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import FileFetcher from './components/FileFetcher'
-import MyHeader from './components/Header'
+import NavStack from './NavStack'
 
 const App: () => React$Node = () => {
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <MyHeader />
-          <FileFetcher />
-          
-        </ScrollView>
-      </SafeAreaView>
-    </>
+    <NavigationContainer>
+          <NavStack />
+    </NavigationContainer>
   );
 };
 

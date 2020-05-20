@@ -1,7 +1,8 @@
 
 import React, {Component} from 'react'
-import {Image, View, Text} from 'react-native'
+import {Image, View, Text, StyleSheet, TouchableWithoutFeedback} from 'react-native'
 import RNFetchBlob from 'rn-fetch-blob';
+import { log } from 'react-native-reanimated'
 
 class FileFetcher extends Component {
   constructor(props) {
@@ -55,11 +56,19 @@ class FileFetcher extends Component {
   };
 
   render() {
-
+    
     return (
       <>
         {this.state.files.map((file, i) => {
-          return <Text key={i}>{file.name}</Text>;
+          return (
+            <TouchableWithoutFeedback
+              key={i}
+              onPress={() => this.props.navigation.navigate('FileDisplay', {file})}>
+              <View style={styles.button}>
+                <Text>{file.name}</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          );
         })}
       </>
     );
@@ -67,3 +76,13 @@ class FileFetcher extends Component {
 }
 
 export default FileFetcher
+
+const styles = StyleSheet.create({
+  button: {
+    margin: 15,
+    padding: 10,
+    width: 260,
+    alignItems: 'center',
+    backgroundColor: '#2196F3'
+  }
+})
