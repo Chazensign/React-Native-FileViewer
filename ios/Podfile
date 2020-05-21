@@ -81,6 +81,8 @@ target 'FileViewer' do
 
   pod 'react-native-video', :path => '../node_modules/react-native-video'
 
+  pod 'RNReactNativeDocViewer', :path => '../node_modules/react-native-doc-viewer'
+
   target 'FileViewerTests' do
     inherit! :complete
     # Pods for testing

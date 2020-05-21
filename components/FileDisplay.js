@@ -1,6 +1,11 @@
 import React from 'react';
 import {Image, View, Text, StyleSheet} from 'react-native';
 import Video from 'react-native-video'
+import OpenFile from 'react-native-doc-viewer'
+
+const RNFS = require('react-native-fs');
+const SavePath =
+  Platform.OS === 'ios' ? RNFS.MainBundlePath : RNFS.DocumentDirectoryPath;
 
 const FileDisplay = (props) => {
 
@@ -35,14 +40,33 @@ const FileDisplay = (props) => {
           }}
           ref={ref => {
             this.player = ref;
-          }} // Store reference
+          }}
           fullscreen={true}
-          onBuffer={this.onBuffer} // Callback when remote video is buffering
-          onError={this.videoError} // Callback when video cannot be loaded
           style={styles.backgroundVideo}
           resizeMode="contain"
         />
       );
+    }else {
+        OpenFile.openDoc(
+          [
+            {
+              url:
+                Platform.OS === 'android'
+                  ? 'file://' + file.path
+                  : '' + file.path,
+              fileNameOptional: file.name,
+              fileType: file.type,
+            },
+          ],
+          (error, url) => {
+            if (error) {
+              this.setState({animating: false});
+            } else {
+              this.setState({animating: false});
+              console.log(url);
+            }
+          },
+        )
     }
   }
 
