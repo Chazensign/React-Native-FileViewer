@@ -1,7 +1,6 @@
 import React from 'react';
 import {Image, View, Text, StyleSheet} from 'react-native';
 import Video from 'react-native-video'
-import OpenFile from 'react-native-doc-viewer'
 
 const FileDisplay = (props) => {
 
@@ -43,26 +42,7 @@ const FileDisplay = (props) => {
         />
       );
     }else {
-        OpenFile.openDoc(
-          [
-            {
-              url:
-                Platform.OS === 'android'
-                  ? 'file://' + file.path
-                  : '' + file.path,
-              fileNameOptional: file.name,
-              fileType: file.type,
-            },
-          ],
-          (error, url) => {
-            if (error) {
-              this.setState({animating: false});
-            } else {
-              this.setState({animating: false});
-              console.log(url);
-            }
-          },
-        )
+       null
     }
   }
 

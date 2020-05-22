@@ -72,16 +72,11 @@ target 'FileViewer' do
   pod 'ReactCommon/callinvoker', :path => "../node_modules/react-native/ReactCommon"
   pod 'ReactCommon/turbomodule/core', :path => "../node_modules/react-native/ReactCommon"
   pod 'Yoga', :path => '../node_modules/react-native/ReactCommon/yoga', :modular_headers => true
-
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
-
   pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
-
   pod 'react-native-video', :path => '../node_modules/react-native-video'
-
-  pod 'RNReactNativeDocViewer', :path => '../node_modules/react-native-doc-viewer'
 
   target 'FileViewerTests' do
     inherit! :complete
