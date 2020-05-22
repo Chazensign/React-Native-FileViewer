@@ -2,7 +2,6 @@
 import React, {Component} from 'react'
 import {Image, View, Text, StyleSheet, TouchableWithoutFeedback} from 'react-native'
 import RNFetchBlob from 'rn-fetch-blob';
-import { log } from 'react-native-reanimated'
 
 class FileFetcher extends Component {
   constructor(props) {

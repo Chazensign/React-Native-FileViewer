@@ -3,10 +3,6 @@ import {Image, View, Text, StyleSheet} from 'react-native';
 import Video from 'react-native-video'
 import OpenFile from 'react-native-doc-viewer'
 
-const RNFS = require('react-native-fs');
-const SavePath =
-  Platform.OS === 'ios' ? RNFS.MainBundlePath : RNFS.DocumentDirectoryPath;
-
 const FileDisplay = (props) => {
 
   const { file } = props.route.params
