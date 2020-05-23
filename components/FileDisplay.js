@@ -2,10 +2,13 @@ import React from 'react';
 import {Image, View, Text, StyleSheet, Dimensions} from 'react-native';
 import Video from 'react-native-video'
 import Pdf from 'react-native-pdf';
+import WebView from 'react-native-webview'
 
 const FileDisplay = (props) => {
 
   const { file } = props.route.params
+
+  console.log(file);
   
   const checkFileType = () => {
     if (file.type === 'jpg' || 
@@ -59,12 +62,22 @@ const FileDisplay = (props) => {
          }}
          style={styles.pdf}
        />;
+    }else {
+      return (
+        
+        <WebView
+          source={{uri: `file://${file.path}`}}
+          originWhitelist={[`*`]}
+          allowFileAccess={true}
+          allowFileAccessFromFileURLs={true}
+          allowingReadAccessToURL={true}
+        />
+      );
     }
   }
 
   return ( 
   <View style={{flex: 1}}>
-    <Text>File Display for {file.name}</Text>
     {checkFileType()}
   </View>
    )

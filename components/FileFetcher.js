@@ -41,14 +41,15 @@ class FileFetcher extends Component {
   };
 
   fetchFileCreatePath = nameStr => {
+   const ext = nameStr.split('.')[1]
     return new Promise((resolve, reject) => {
-      RNFetchBlob.config({fileCache: true})
+      RNFetchBlob.config({fileCache: true, appendExt: ext})
         .fetch('GET', `http://10.0.2.2:4040/file/${nameStr}`)
         .then(res => {
           resolve({
             name: nameStr,
             path: res.path(),
-            type: nameStr.split('.')[1],
+            type: ext,
           });
         });
     });
@@ -56,7 +57,6 @@ class FileFetcher extends Component {
 
   onFileSelect = (selected) => {
     let {navigation} = this.props
-    navigation.setOptions({title: selected.name})
     navigation.navigate('FileDisplay', {file: selected})
   }
 

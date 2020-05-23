@@ -13,12 +13,17 @@ const NavStack = (props) => {
       <Stack.Screen
         name="Home"
         component={FileFetcher}
-        options={{title: 'File Viewer'}}
+        options={{headerTitleAlign: 'center'}}
       />
       <Stack.Screen
         name="FileDisplay"
         component={FileDisplay}
-        options={({route}) => ({name: route.params.title})}
+        // options={(props) => {
+        //   console.log(props);
+
+        //   return {headerShown: false, title: props.route.name};
+        // }}
+        options={{headerTitleAlign: 'center'}}
       />
     </Stack.Navigator>
   );

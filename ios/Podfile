@@ -80,6 +80,8 @@ target 'FileViewer' do
 
   pod 'react-native-progress-bar-android', :path => '../node_modules/@react-native-community/progress-bar-android'
 
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+
   target 'FileViewerTests' do
     inherit! :complete
     # Pods for testing
