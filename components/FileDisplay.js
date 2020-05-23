@@ -1,11 +1,11 @@
 import React from 'react';
-import {Image, View, Text, StyleSheet} from 'react-native';
+import {Image, View, Text, StyleSheet, Dimensions} from 'react-native';
 import Video from 'react-native-video'
+import Pdf from 'react-native-pdf';
 
 const FileDisplay = (props) => {
 
   const { file } = props.route.params
-  console.log(file)
   
   const checkFileType = () => {
     if (file.type === 'jpg' || 
@@ -41,8 +41,24 @@ const FileDisplay = (props) => {
           resizeMode="contain"
         />
       );
-    }else {
-       null
+    }else if (file.type === 'pdf') {
+      
+       return <Pdf
+         source={{uri: 'file://' +file.path}}
+         onLoadComplete={(numberOfPages, filePath) => {
+           console.log(`number of pages: ${numberOfPages}`);
+         }}
+         onPageChanged={(page, numberOfPages) => {
+           console.log(`current page: ${page}`);
+         }}
+         onError={error => {
+           console.log(error);
+         }}
+         onPressLink={uri => {
+           console.log(`Link presse: ${uri}`);
+         }}
+         style={styles.pdf}
+       />;
     }
   }
 
@@ -68,5 +84,10 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
+  },
+  pdf: {
+    flex: 1,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
   },
 });

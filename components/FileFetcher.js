@@ -54,6 +54,12 @@ class FileFetcher extends Component {
     });
   };
 
+  onFileSelect = (selected) => {
+    let {navigation} = this.props
+    navigation.setOptions({title: selected.name})
+    navigation.navigate('FileDisplay', {file: selected})
+  }
+
   render() {
     
     return (
@@ -62,7 +68,7 @@ class FileFetcher extends Component {
           return (
             <TouchableWithoutFeedback
               key={i}
-              onPress={() => this.props.navigation.navigate('FileDisplay', {file})}>
+              onPress={() =>{this.onFileSelect(file)}}>
               <View style={styles.button}>
                 <Text>{file.name}</Text>
               </View>

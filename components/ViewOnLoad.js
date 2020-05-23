@@ -10,7 +10,6 @@ const ViewOnLoad = () => {
     RNFetchBlob.config({fileCache: true})
       .fetch('GET', `http://10.0.2.2:4040/file/employees.xls`)
       .then(res => {
-        console.log(res.info());
         return res.path()
       })
     };

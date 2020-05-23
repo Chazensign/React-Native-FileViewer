@@ -5,7 +5,9 @@ import FileDisplay from './components/FileDisplay';
 
 const Stack = createStackNavigator();
 
-const NavStack = () => {
+const NavStack = (props) => {
+  
+  
   return (
     <Stack.Navigator initialRouteName="Home">
       <Stack.Screen
@@ -13,7 +15,11 @@ const NavStack = () => {
         component={FileFetcher}
         options={{title: 'File Viewer'}}
       />
-      <Stack.Screen name="FileDisplay" component={FileDisplay} />
+      <Stack.Screen
+        name="FileDisplay"
+        component={FileDisplay}
+        options={({route}) => ({name: route.params.title})}
+      />
     </Stack.Navigator>
   );
 }
