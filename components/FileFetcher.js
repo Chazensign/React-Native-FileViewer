@@ -1,6 +1,10 @@
-
-import React, {Component} from 'react'
-import {Image, View, Text, StyleSheet, TouchableWithoutFeedback} from 'react-native'
+import React, {Component} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 
 class FileFetcher extends Component {
@@ -18,57 +22,78 @@ class FileFetcher extends Component {
   }
 
   componentDidMount() {
-    this.getFileNames()
+    this.getFileNames();
   }
 
   getFileNames = () => {
     fetch('http://10.0.2.2:4040/files')
       .then(async res => {
         let response = await res.json();
-        this.setState({fileNames: response.data})
-        this.downloadFiles(response.data)
+        this.setState({fileNames: response.data});
+        this.downloadFiles(response.data);
       })
-      .catch(err => console.log(err))
-  }
+      .catch(err => console.log(err));
+  };
 
   downloadFiles = async list => {
     let filesArr = [];
     for (let i = 0; i < list.length; i++) {
-      let fileInfo = await this.fetchFileCreatePath(list[i])
-      filesArr.push(fileInfo)
-      if (i === list.length - 1) this.setState({files: filesArr})
+      let fileInfo = await this.fetchFileCreatePath(list[i]);
+      filesArr.push(fileInfo);
+      if (i === list.length - 1) this.setState({files: filesArr});
     }
   };
 
   fetchFileCreatePath = nameStr => {
-   const ext = nameStr.split('.')[1]
+    const ext = nameStr.split('.')[1];
     return new Promise((resolve, reject) => {
+      let path = ''
+        if (ext === 'xls') {
       RNFetchBlob.config({fileCache: true, appendExt: ext})
         .fetch('GET', `http://10.0.2.2:4040/file/${nameStr}`)
         .then(res => {
+            path = res.path()
+            return res.array()
+        })
+        .then(xlsArr => {
+          let u8Arr = new Uint8Array(xlsArr);
           resolve({
             name: nameStr,
-            path: res.path(),
+            data: u8Arr,
             type: ext,
           });
-        });
+        }).catch(err => console.log(err))
+      }else {
+        RNFetchBlob.config({fileCache: true, appendExt: ext})
+          .fetch('GET', `http://10.0.2.2:4040/file/${nameStr}`)
+          .then(res => {
+              resolve({
+                name: nameStr,
+                path: res.path(),
+                type: ext,
+              })
+          })
+      }
+
+      // }
     });
   };
 
-  onFileSelect = (selected) => {
-    let {navigation} = this.props
-    navigation.navigate('FileDisplay', {file: selected})
-  }
+  onFileSelect = selected => {
+    let {navigation} = this.props;
+    navigation.navigate('FileDisplay', {file: selected});
+  };
 
   render() {
-    
     return (
       <>
         {this.state.files.map((file, i) => {
           return (
             <TouchableWithoutFeedback
               key={i}
-              onPress={() =>{this.onFileSelect(file)}}>
+              onPress={() => {
+                this.onFileSelect(file);
+              }}>
               <View style={styles.button}>
                 <Text>{file.name}</Text>
               </View>
@@ -80,7 +105,7 @@ class FileFetcher extends Component {
   }
 }
 
-export default FileFetcher
+export default FileFetcher;
 
 const styles = StyleSheet.create({
   button: {
@@ -88,6 +113,6 @@ const styles = StyleSheet.create({
     padding: 10,
     width: 260,
     alignItems: 'center',
-    backgroundColor: '#2196F3'
-  }
-})
+    backgroundColor: '#2196F3',
+  },
+});

@@ -3,7 +3,8 @@ import {Image, View, Text, StyleSheet, Dimensions} from 'react-native';
 import Video from 'react-native-video'
 import Pdf from 'react-native-pdf';
 import WebView from 'react-native-webview'
-import RNFetchBlob from 'rn-fetch-blob'
+import XLSX from 'xlsx';
+import XLSFileDisp from './XLSFileDisp'
 
 const FileDisplay = (props) => {
 
@@ -61,18 +62,10 @@ const FileDisplay = (props) => {
         />
       );
     } else {
-      return (
-        <Text>Content support in development.</Text>
-        // <WebView
-        //   source={{
-        //     uri: `https://view.officeapps.live.com/op/embed.aspx?src=content://${file.path}`,
-        //   }}
-        //   originWhitelist={[`*`]}
-        //   allowFileAccess={true}
-        //   allowFileAccessFromFileURLs={true}
-        //   allowingReadAccessToURL={true}
-        // />
-      );
+      var workbook = XLSX.read(file.data, {type: 'array'});
+      var first_worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      var data = XLSX.utils.sheet_to_json(first_worksheet, {header: 1});
+      return <XLSFileDisp array={data}/>
     }
   }
 
