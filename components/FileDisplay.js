@@ -3,28 +3,24 @@ import {Image, View, Text, StyleSheet, Dimensions} from 'react-native';
 import Video from 'react-native-video'
 import Pdf from 'react-native-pdf';
 import WebView from 'react-native-webview'
+import RNFetchBlob from 'rn-fetch-blob'
 
 const FileDisplay = (props) => {
 
   const { file } = props.route.params
-
-  console.log(file);
   
   const checkFileType = () => {
-    if (file.type === 'jpg' || 
-    file.type === 'png' || 
-    file.type === 'gif'
-    ) {
+    if (file.type === 'jpg' || file.type === 'png' || file.type === 'gif') {
       return (
         <Image
           source={{
             uri:
               Platform.OS === 'android'
                 ? 'file://' + file.path
-                : '' + file.path
+                : '' + file.path,
           }}
           style={styles.file}
-          resizeMode='contain'
+          resizeMode="contain"
         />
       );
     } else if (file.type === 'mp4') {
@@ -44,27 +40,18 @@ const FileDisplay = (props) => {
           resizeMode="contain"
         />
       );
-    }else if (file.type === 'pdf') {
-      
-       return <Pdf
-         source={{uri: 'file://' +file.path}}
-         onLoadComplete={(numberOfPages, filePath) => {
-           console.log(`number of pages: ${numberOfPages}`);
-         }}
-         onPageChanged={(page, numberOfPages) => {
-           console.log(`current page: ${page}`);
-         }}
-         onError={error => {
-           console.log(error);
-         }}
-         onPressLink={uri => {
-           console.log(`Link presse: ${uri}`);
-         }}
-         style={styles.pdf}
-       />;
-    }else {
+    } else if (file.type === 'pdf') {
       return (
-        
+        <Pdf
+          source={{uri: 'file://' + file.path}}
+          onError={error => {
+            console.log(error);
+          }}
+          style={styles.pdf}
+        />
+      );
+    } else if (file.type === 'html') {
+      return (
         <WebView
           source={{uri: `file://${file.path}`}}
           originWhitelist={[`*`]}
@@ -72,6 +59,19 @@ const FileDisplay = (props) => {
           allowFileAccessFromFileURLs={true}
           allowingReadAccessToURL={true}
         />
+      );
+    } else {
+      return (
+        <Text>Content support in development.</Text>
+        // <WebView
+        //   source={{
+        //     uri: `https://view.officeapps.live.com/op/embed.aspx?src=content://${file.path}`,
+        //   }}
+        //   originWhitelist={[`*`]}
+        //   allowFileAccess={true}
+        //   allowFileAccessFromFileURLs={true}
+        //   allowingReadAccessToURL={true}
+        // />
       );
     }
   }
