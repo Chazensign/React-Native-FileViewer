@@ -1,10 +1,5 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableWithoutFeedback, ActivityIndicator, Platform} from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 
 class FileFetcher extends Component {
@@ -13,6 +8,7 @@ class FileFetcher extends Component {
     this.state = {
       fileNames: [],
       files: [],
+      loading: false,
       // file object {
       //              name: string,
       //              path: cacheFilePathString,
@@ -22,6 +18,7 @@ class FileFetcher extends Component {
   }
 
   componentDidMount() {
+    this.setState({ loading: true });
     this.getFileNames();
   }
 
@@ -38,46 +35,57 @@ class FileFetcher extends Component {
   downloadFiles = async list => {
     let filesArr = [];
     for (let i = 0; i < list.length; i++) {
-      let fileInfo = await this.fetchFileCreatePath(list[i]);
+      let fileInfo = await this.filterFileType(list[i]);
       filesArr.push(fileInfo);
-      if (i === list.length - 1) this.setState({files: filesArr});
+      if (i === list.length - 1) this.setState({files: filesArr, loading: false});
     }
   };
 
-  fetchFileCreatePath = nameStr => {
-    const ext = nameStr.split('.')[1];
+  filterFileType = nameStr => {
+    const ext = nameStr.split('.')[1]
+     return new Promise(async(resolve, reject) => {
+      if (ext === 'xls') {
+        let xlsFile = await this.fetchXLS(nameStr, ext)
+        resolve (xlsFile)
+      } else {
+        let fileObj = await this.fetchFile(nameStr, ext)
+        resolve (fileObj)
+    }
+  })
+  };
+
+  fetchFile = (nameStr, ext) => {
     return new Promise((resolve, reject) => {
-      let path = ''
-        if (ext === 'xls') {
-      RNFetchBlob.config({fileCache: true, appendExt: ext})
-        .fetch('GET', `http://10.0.2.2:4040/file/${nameStr}`)
-        .then(res => {
-            path = res.path()
-            return res.array()
-        })
-        .then(xlsArr => {
-          let u8Arr = new Uint8Array(xlsArr);
-          resolve({
-            name: nameStr,
-            data: u8Arr,
-            type: ext,
-          });
-        }).catch(err => console.log(err))
-      }else {
         RNFetchBlob.config({fileCache: true, appendExt: ext})
           .fetch('GET', `http://10.0.2.2:4040/file/${nameStr}`)
           .then(res => {
-              resolve({
-                name: nameStr,
-                path: res.path(),
-                type: ext,
-              })
-          })
-      }
+            resolve({
+              name: nameStr,
+              path: res.path(),
+              type: ext,
+            });
+          });
+      })
+  }
 
-      // }
-    });
-  };
+  fetchXLS = (nameStr, ext) => {
+    return new Promise((resolve, reject) => {
+        RNFetchBlob.config({fileCache: true, appendExt: ext})
+          .fetch('GET', `http://10.0.2.2:4040/file/${nameStr}`)
+          .then(res => {
+            return res.array();
+          })
+          .then(xlsArr => {
+            let u8Arr = new Uint8Array(xlsArr);
+            resolve({
+              name: nameStr,
+              data: u8Arr,
+              type: ext,
+            });
+          })
+          .catch(err => console.log(err));
+        })
+  }
 
   onFileSelect = selected => {
     let {navigation} = this.props;
@@ -85,8 +93,14 @@ class FileFetcher extends Component {
   };
 
   render() {
-    return (
-      <>
+    return this.state.loading ? (
+      <ActivityIndicator
+        style={{paddingTop: 200}}
+        color="#2196F3"
+        size={Platform.os === 'ios' ? 'large' : 150}
+      />
+    ) : (
+      <View style={styles.list}>
         {this.state.files.map((file, i) => {
           return (
             <TouchableWithoutFeedback
@@ -100,7 +114,7 @@ class FileFetcher extends Component {
             </TouchableWithoutFeedback>
           );
         })}
-      </>
+      </View>
     );
   }
 }
@@ -108,11 +122,18 @@ class FileFetcher extends Component {
 export default FileFetcher;
 
 const styles = StyleSheet.create({
+  list: {
+    paddingTop: 30,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
   button: {
     margin: 15,
     padding: 10,
     width: 260,
     alignItems: 'center',
-    backgroundColor: '#2196F3',
+    borderRadius: 5,
+    backgroundColor: '#2196F3'
   },
 });

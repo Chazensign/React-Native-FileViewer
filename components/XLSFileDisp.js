@@ -32,7 +32,7 @@ export default class XLSFileDisp extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, padding: 5, paddingTop: 5, backgroundColor: '#fff'},
-  head: {height: 40, backgroundColor: '#d6ebff'},
-  text: {margin: 1},
+  container: {flex: 1, padding: 5, backgroundColor: '#fff'},
+  head: {height: 45, backgroundColor: '#d6ebff'},
+  text: {margin: 2, textAlign: 'center'},
 });
