@@ -82,6 +82,8 @@ target 'FileViewer' do
 
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
 
+  pod 'RNReactNativeDocViewer', :path => '../node_modules/react-native-doc-viewer'
+
   target 'FileViewerTests' do
     inherit! :complete
     # Pods for testing

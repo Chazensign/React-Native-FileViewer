@@ -1,14 +1,27 @@
 import React, {Component} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Table, Row, Rows} from 'react-native-table-component';
+import XLSX from 'xlsx';
 
 export default class XLSFileDisp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tableHead: props.array[0],
-      tableData: [...props.array.slice(1)],
+      tableHead: [],
+      tableData: []
     };
+  }
+
+  componentDidMount = () => {
+    var workbook = XLSX.read(this.props.file.data, {type: 'array'});
+    var first_worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    var data = XLSX.utils.sheet_to_json(first_worksheet, {
+      header: 1,
+    });
+    this.setState({
+      tableHead: data[0],
+      tableData: [...data.slice(1)]
+    });
   }
 
   render() {

@@ -1,15 +1,15 @@
 import React from 'react';
 import {Image, View, Text, StyleSheet, Dimensions} from 'react-native';
-import Video from 'react-native-video'
+import Video from 'react-native-video';
 import Pdf from 'react-native-pdf';
-import WebView from 'react-native-webview'
+import WebView from 'react-native-webview';
 import XLSX from 'xlsx';
-import XLSFileDisp from './XLSFileDisp'
+import XLSFileDisp from './XLSFileDisp';
+import OpenFile from 'react-native-doc-viewer';
 
-const FileDisplay = (props) => {
+const FileDisplay = props => {
+  const {file} = props.route.params;
 
-  const { file } = props.route.params
-  
   const checkFileType = () => {
     if (file.type === 'jpg' || file.type === 'png' || file.type === 'gif') {
       return (
@@ -61,24 +61,41 @@ const FileDisplay = (props) => {
           allowingReadAccessToURL={true}
         />
       );
+    } else if (file.type === 'xls') {
+      // var workbook = XLSX.read(file.data, {type: 'array'});
+      // var first_worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      // var data = XLSX.utils.sheet_to_json(first_worksheet, {
+      //   header: 1,
+      // });
+      return <XLSFileDisp file={file} />;
     } else {
-      var workbook = XLSX.read(file.data, {type: 'array'});
-      var first_worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      var data = XLSX.utils.sheet_to_json(first_worksheet, {header: 1});
-      return <XLSFileDisp array={data}/>
+      props.navigation.navigate('Home')
+      // return OpenFile.openDocb64(
+      //   [
+      //     {
+      //       base64: file.data,
+      //       fileName: file.name,
+      //       fileType: file.type,
+      //       cache: true
+      //     },
+      //   ],
+      //   (error, url) => {
+      //     if (error) {
+      //       console.log(error);
+      //     } else {
+      //       console.log(url);
+      //     }
+      //   },
+      // );
     }
-  }
+  };
 
-  return ( 
-  <View style={{flex: 1}}>
-    {checkFileType()}
-  </View>
-   )
-}
- 
+  return <View style={{flex: 1}}>{checkFileType()}</View>;
+};
+
 export default FileDisplay;
-const width_proportion = '100%'
-const height_proportion = '100%'
+const width_proportion = '100%';
+const height_proportion = '100%';
 const styles = StyleSheet.create({
   file: {
     width: width_proportion,
