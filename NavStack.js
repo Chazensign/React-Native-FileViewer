@@ -18,7 +18,10 @@ const NavStack = (props) => {
       <Stack.Screen
         name="FileDisplay"
         component={FileDisplay}
-        options={{headerTitleAlign: 'center'}}
+        options={({route}) => ({
+          title: route.params.name,
+          headerTitleAlign: 'center',
+        })}
       />
     </Stack.Navigator>
   );

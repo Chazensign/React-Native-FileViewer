@@ -124,7 +124,7 @@ class FileFetcher extends Component {
 
   onFileSelect = selected => {
     let {navigation} = this.props;
-    navigation.navigate('FileDisplay', {file: selected});
+    navigation.navigate('FileDisplay', {file: selected, name: this.displayName(selected.name)});
   };
 
   displayDoc = file => {
