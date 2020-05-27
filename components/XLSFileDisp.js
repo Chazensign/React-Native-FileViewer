@@ -25,18 +25,19 @@ export default class XLSFileDisp extends Component {
   }
 
   render() {
-    const state = this.state;
+    const {thumbnail} = this.props
+    const {tableHead, tableData} = this.state
     return (
-      <View style={styles.container}>
+      <View style={thumbnail ? styles.thumbCont : styles.container}>
         <Table borderStyle={{borderWidth: 2, borderColor: '#3590b8'}}>
           <Row
-            data={state.tableHead}
-            style={styles.head}
-            textStyle={styles.text}
+            data={tableHead}
+            style={thumbnail ? styles.thumbHead : styles.head}
+            textStyle={thumbnail ? styles.thumbText : styles.text}
           />
           <Rows
-            data={state.tableData}
-            textStyle={styles.text}
+            data={tableData}
+            textStyle={thumbnail ? styles.thumbText : styles.text}
           />
         </Table>
       </View>
@@ -45,7 +46,10 @@ export default class XLSFileDisp extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {flex: 1, padding: 5, backgroundColor: '#fff'},
+  container: {flex: 1, padding: 5},
   head: {height: 45, backgroundColor: '#d6ebff'},
   text: {margin: 2, textAlign: 'center'},
+  thumbCont: { backgroundColor: '#fff'},
+  thumbHead: {height: 15, backgroundColor: '#d6ebff'},
+  thumbText: {margin: 0, textAlign: 'center', fontSize: 5},
 });

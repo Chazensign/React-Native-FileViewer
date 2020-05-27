@@ -1,7 +1,18 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TouchableWithoutFeedback, ActivityIndicator, Platform} from 'react-native';
+import {
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  ActivityIndicator,
+  Platform,
+  Dimensions,
+} from 'react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 import OpenFile from 'react-native-doc-viewer';
+import FileDisplay from './FileDisplay';
+import XLSFileDisp from './XLSFileDisp'
 
 class FileFetcher extends Component {
   constructor(props) {
@@ -51,8 +62,8 @@ class FileFetcher extends Component {
         resolve(xlsFile);
       }
       if (ext === 'doc' || ext === 'ppt') {
-        let base64Obj = this.fetchOtherDocs(nameStr, ext)
-        resolve(base64Obj)
+        let base64Obj = this.fetchOtherDocs(nameStr, ext);
+        resolve(base64Obj);
       } else {
         let fileObj = await this.fetchFile(nameStr, ext);
         resolve(fileObj);
@@ -98,7 +109,7 @@ class FileFetcher extends Component {
       RNFetchBlob.config({fileCache: true, appendExt: ext})
         .fetch('GET', `http://10.0.2.2:4040/file/${nameStr}`)
         .then(res => {
-          return res.base64()
+          return res.base64();
         })
         .then(b64Data => {
           resolve({
@@ -116,7 +127,7 @@ class FileFetcher extends Component {
     navigation.navigate('FileDisplay', {file: selected});
   };
 
-  displayDoc = (file) => {
+  displayDoc = file => {
     OpenFile.openDocb64(
       [
         {
@@ -129,11 +140,16 @@ class FileFetcher extends Component {
       (error, url) => {
         if (error) {
           console.log(error);
-        } else {
-          console.log(url);
         }
       },
     );
+  };
+
+  displayName = (name) => {
+    let nameArr = name.split('.')
+    let newName = nameArr[0].substring(1)
+    let capped = name[0].toUpperCase();
+    return capped + newName
   }
 
   render() {
@@ -144,25 +160,28 @@ class FileFetcher extends Component {
         size={Platform.os === 'ios' ? 'large' : 150}
       />
     ) : (
-      <View style={styles.list}>
+      <ScrollView style={styles.list}>
         {this.state.files.map((file, i) => {
           return (
             <TouchableWithoutFeedback
               key={i}
               onPress={() => {
                 if (file.type === 'ppt' || file.type === 'doc') {
-                  this.displayDoc(file)
-                }else {
-                  this.onFileSelect(file)
+                  this.displayDoc(file);
+                } else {
+                  this.onFileSelect(file);
                 }
               }}>
               <View style={styles.button}>
-                <Text>{file.name}</Text>
+                <Text style={{textAlign: 'center', fontSize: 20, marginLeft: 10, marginRight: 20}}>{this.displayName(file.name)}</Text>
+                <>
+                {(file.type !== 'ppt' && file.type !== 'doc') ? <FileDisplay file={file} /> : null}
+                </>
               </View>
             </TouchableWithoutFeedback>
           );
         })}
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -171,17 +190,18 @@ export default FileFetcher;
 
 const styles = StyleSheet.create({
   list: {
-    paddingTop: 15,
-    alignItems: 'center',
-    justifyContent: 'center'
+    paddingTop: 5,
   },
 
   button: {
-    margin: 15,
-    padding: 10,
-    width: 260,
-    alignItems: 'center',
+    flexDirection: 'row',
+    
+    margin: 3,
+    marginLeft: 10,
+    marginRight: 10,
+    padding: 5,
+    width: Dimensions.get('window').width - 20,
     borderRadius: 5,
-    backgroundColor: '#2196F3'
+    backgroundColor: '#2196F3',
   },
 });
